@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Shomigo</title>
+  <%= render 'layouts/meta' %>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
     <%= render 'layouts/nav' %>
-
+    <% if current_page?(root_path) %>
+        <%= render 'shared/jumbotron' %>
+    <% end %>
+    
     <div class="container">
         
        <% flash.each do |name, msg| %>
