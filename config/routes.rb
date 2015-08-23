@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   root 'listings#index'
   get 'about', to: 'pages#about'
   get 'contact', to: 'pages#contact'
+
+  get 'seller', to: 'listings#seller'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
