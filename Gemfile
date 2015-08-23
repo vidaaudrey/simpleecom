@@ -59,3 +59,4 @@ end
 gem 'paperclip', '4.3.0'
 gem 'paperclip-dropbox', '1.3.2'
 gem 'figaro', '1.1.1'
+gem 'devise', '3.5.2'
