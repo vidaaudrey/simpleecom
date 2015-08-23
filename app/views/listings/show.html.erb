@@ -6,6 +6,7 @@
     <div class="col-md-6">
        <h2> <%= @listing.name %></h2>
         <p> <%= number_to_currency(@listing.price) %></p>
+        <p>Sold by: <%= @listing.user.name %></p>
         <%= @listing.description %>
     </div>
 </div>
