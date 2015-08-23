@@ -2,12 +2,35 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-table
-    background: #f0f0f0
-
 // a.btn, a.btn-success, a.btn-warning, a.btn-danger, a.btn-primary, a.btn-info
 //     color: #fff !important
 
+// mixins 
+=center
+    text-align: center
+
+=centerer($horizontal: true, $vertical: true)
+    position: absolute
+    @if ($horizontal and $vertical)
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+    @else if ($horizontal)
+        left: 50%
+        transform: translate(-50%, 0)
+    @else
+        top: 50%
+        transform: translate(0, -50%)
+
+
+=vertical-align
+    position: relative
+    top: 50%
+    -webkit-transform: translateY(-50%)
+    -ms-transform: translateY(-50%)
+    transform: translateY(-50%)
+
+// custom css 
 .center
     text-align: center
     
@@ -27,6 +50,17 @@ nav a.btn-success
 .col-md-3:nth-child(4n+1)
     clear: left
 
+#listings-table
+    thead th
+        +center
+    td
+        &:nth-child(2)
+            min-width: 100px
+        &:nth-child(5)
+            min-width: 80px
+            text-align: center
+
+        
 
 // .footer 
 //     position: absolute 
