@@ -4,17 +4,18 @@
     <div class="col-sm-6 col-md-3">
       <div class="thumbnail center"> 
         <%= link_to image_tag(listing.image.url), listing %>
-          <div class="caption">
-               <h3><%= listing.name %></h3>
+          <div class="caption center">
+               <h3><%= link_to listing.name, listing %></h3>
               
-               <p> <%= number_to_currency(listing.price) %>
+               <%= number_to_currency(listing.price) %>
                 / By <%= listing.user.name %>
-               </p>
-               
+       
+               <br/>
+               <% if user_signed_in? and current_user == listing.user %>
+                 <%= link_to 'Edit', edit_listing_path(listing), class: "btn btn-link" %>
+                 <%= link_to 'Destroy', listing, method: :delete, data: { confirm: 'Are you sure?' } , class: "btn btn-link" %>
+               <% end %>
 
-               <%= link_to 'Show', listing, class: "btn btn-link" %>
-               <%= link_to 'Edit', edit_listing_path(listing), class: "btn btn-link" %>
-               <%= link_to 'Destroy', listing, method: :delete, data: { confirm: 'Are you sure?' } , class: "btn btn-link" %>
           </div>
         </div>
     </div>
