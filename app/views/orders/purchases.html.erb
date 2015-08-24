@@ -19,7 +19,7 @@
           <td><%= order.listing.name %></td>
           <td><%= number_to_currency(order.listing.price) %></td>
           <td><%= order.seller.name %></td>
-          <td><%= order.created_at.strftime("%B %-d, %Y") %></td>
+          <td><%= order.created_at.strftime("%I:%M%P, %B %-d, %Y  ") %></td>
           <td>
 
             <%= link_to order.listing do %>

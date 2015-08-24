@@ -33,7 +33,13 @@ class OrdersController < ApplicationController
     begin 
       charge = Stripe::Charge.create(customer:customer.id, amount: (@order.listing.price * 100).to_i, description: "Rails Stripe Customer Desc", currency: "usd")
       flash[:notice] = "Thanks for ordering"
+
+      if !@order.save
+        flash[:error] = "Your purchase is successful but we have problem storing your order."  #update later
+      end
+
       redirect_to listings_path
+      
     rescue Stripe::CardError => e 
         flash[:error] = e.message 
         redirect_to listing_orders_path(@listing)
