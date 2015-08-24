@@ -2,16 +2,14 @@ class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
-  # GET /orders
-  # GET /orders.json
-  def index
-    @orders = Order.all
+  def sales 
+    @order = Order.all.where(seller: current_user).order('created_at DESC')
   end
 
-  # GET /orders/1
-  # GET /orders/1.json
-  def show
-  end
+  def purchases
+    @order = Order.all.where(buyer: current_user).order('created_at DESC')
+  end 
+
 
   # GET /orders/new
   def new
@@ -19,9 +17,6 @@ class OrdersController < ApplicationController
     @listing = Listing.find(params[:listing_id])
   end
 
-  # GET /orders/1/edit
-  def edit
-  end
 
   # POST /orders
   # POST /orders.json
