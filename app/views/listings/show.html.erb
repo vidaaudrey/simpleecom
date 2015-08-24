@@ -7,7 +7,9 @@
        <h2> <%= @listing.name %></h2>
         <p> <%= number_to_currency(@listing.price) %></p>
         <p>Sold by: <%= @listing.user.name %></p>
-        <%= @listing.description %>
+       <p> <%= @listing.description %></p>
+        <br/>
+       <p class="pull-right"> <%= link_to "Buy Now", new_listing_order_path(@listing), class:"btn btn-success" %></p>
     </div>
 </div>
 

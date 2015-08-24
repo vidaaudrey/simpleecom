@@ -1,15 +1,16 @@
 Rails.application.routes.draw do
+  
   devise_for :users
  
-
+  root 'listings#index'
   get 'privacy', to:'pages#privacy'
   get 'term', to:'pages#term'
-
-  resources :listings
-  root 'listings#index'
   get 'about', to: 'pages#about'
   get 'contact', to: 'pages#contact'
 
+  resources :listings do 
+    resources :orders
+  end 
   get 'seller', to: 'listings#seller'
   
   # The priority is based upon order of creation: first created -> highest priority.
