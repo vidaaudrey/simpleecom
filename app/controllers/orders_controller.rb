@@ -28,31 +28,56 @@ class OrdersController < ApplicationController
     @order.buyer = current_user
     
     #Strip stuff 
-    customer = Stripe::Customer.create(email: @order.buyer.email, card: params[:stripeToken])
-    begin 
-      if !@order.save
-        flash[:error] = "Your purchase is successful but we have problem storing your order."  #update later
-      end
+    Stripe.api_key = ENV["stripe_api_key"]
+    token = params[:stripeToken]
 
-      charge = Stripe::Charge.create(customer:customer.id, amount: (@order.listing.price * 100).to_i, description:  "#{@order.id}-#{@listing.name}-#{@order.buyer.name}", currency: "usd")
+    begin
+      charge = Stripe::Charge.create(
+        amount: (@order.listing.price * 100).floor, 
+        description:  "#{@order.id}-#{@listing.name}-#{@order.buyer.name}", 
+        currency: "usd",
+        card: token, 
+        )
       flash[:notice] = "Thanks for ordering"
-      
-      redirect_to listings_path
-
     rescue Stripe::CardError => e 
         flash[:error] = e.message 
-        redirect_to listing_orders_path(@listing)
     end 
-     
-    # respond_to do |format|
-    #   if @order.save
-    #     format.html { redirect_to root_url, notice: 'Order was successfully created.' }
-    #     format.json { render :show, status: :created, location: @order }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @order.errors, status: :unprocessable_entity }
+
+    transfer = Stripe::Transfer.create(
+      amount: (@listing.price * 95).floor,
+      currency: "usd", 
+      recipient: current_user.recipient
+      )
+    
+
+    # customer = Stripe::Customer.create(
+    #   email: @order.buyer.email, 
+    #   card: params[:stripeToken]
+    # )
+    # begin 
+    #   if !@order.save
+    #     flash[:error] = "Your purchase is successful but we have problem storing your order."  #update later
     #   end
-    # end
+
+    #   charge = Stripe::Charge.create(customer:customer.id, amount: (@order.listing.price * 100).to_i, description:  "#{@order.id}-#{@listing.name}-#{@order.buyer.name}", currency: "usd")
+    #   flash[:notice] = "Thanks for ordering"
+      
+    #   redirect_to listings_path
+
+    # rescue Stripe::CardError => e 
+    #     flash[:error] = e.message 
+    #     redirect_to listing_orders_path(@listing)
+    # end 
+     
+    respond_to do |format|
+      if @order.save
+        format.html { redirect_to root_url, notice: 'Order was successfully created.' }
+        format.json { render :show, status: :created, location: @order }
+      else
+        format.html { render :new }
+        format.json { render json: @order.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /orders/1

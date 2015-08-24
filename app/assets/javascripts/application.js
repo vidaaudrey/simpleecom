@@ -17,3 +17,7 @@
 //
 //= require jquery
 //= require bootstrap-sprockets
+
+$(document).on('click','#search',function(){
+    alert ("search result here");
+});

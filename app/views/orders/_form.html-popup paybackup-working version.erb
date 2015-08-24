@@ -1,0 +1,39 @@
+
+<div class="col-md-4">
+  <%= link_to image_tag(@listing.image.url, class: "order-image"), @listing %>
+</div>
+
+
+<div class="col-md-8">
+    <noscript> Please turn on your Javascript to enable purchase</noscript>
+    <h2><%= @listing.name %></h2>
+    <h3> <%= @listing.price %></h3>
+
+    <%= form_for([@listing, @order]) do |f| %>
+      <%= render 'shared/error', obj: @order %>
+  
+  
+      <div class="form-group">
+        <%= f.label :address %>
+        <%= f.text_field :address, class:"form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :city %>
+        <%= f.text_field :city, class:"form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :state %>
+        <%= f.text_field :state, class:"form-control" %>
+      </div>
+  
+      
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-description="<%= @listing.name %>"
+              data-amount="<%= @listing.price * 100 %>"
+              data-locale="auto"
+              data-email="<%= current_user.email %>">
+      </script> 
+  
+    <% end %>
+  </div>

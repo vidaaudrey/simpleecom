@@ -5,13 +5,15 @@
 
 
 <div class="col-md-8">
-    <noscript> Please turn on your Javascript to enable purchase</noscript>
     <h2><%= @listing.name %></h2>
     <h3> <%= @listing.price %></h3>
 
     <%= form_for([@listing, @order]) do |f| %>
       <%= render 'shared/error', obj: @order %>
-  
+      
+      <div id="stripe_error" class="alert alert-danger" style="display:none">
+        <noscript>Javascript needs to be enabled</noscript>
+      </div>
   
       <div class="form-group">
         <%= f.label :address %>
@@ -26,14 +28,33 @@
         <%= f.text_field :state, class:"form-control" %>
       </div>
   
-      
-      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
-              data-description="<%= @listing.name %>"
-              data-amount="<%= @listing.price * 100 %>"
-              data-locale="auto"
-              data-email="<%= current_user.email %>">
-      </script> 
+     
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-8">
+            <%= label_tag :card_number, "Credit Card Number" %>
+            <%= text_field_tag :card_number, nil, {name:nil, 'data-stripe': "number", class: "form-control"} %>
+            </div>
   
+            <div class="col-md-4">
+              <%= label_tag :card_code, "CVC" %>
+              <%= text_field_tag :card_code, nil, {name:nil, 'data-stripe': "cvc", class: "form-control"} %>
+            </div>
+          </div>
+      </div>
+  
+      <div class="form-group">
+        <%= label_tag nil, "Expiration Date" %>
+        <div class="row">
+          <div class="col-md-3">
+            <%= select_month nil, {use_two_digit_numbers:true}, {name: nil, 'data-stripe': "exp-month", class: "form-control"} %>
+          </div>
+          <div class="col-md-3">
+            <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+10}, {name: nil, 'data-stripe': "exp-year", class: "form-control"} %>
+          </div>
+        </div>
+      </div>
+      
+      <%= f.submit class:"btn btn-primary" %>
     <% end %>
   </div>
