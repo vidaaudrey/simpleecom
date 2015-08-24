@@ -26,17 +26,28 @@ class OrdersController < ApplicationController
     @order.listing = @listing 
     @order.seller = @listing.user
     @order.buyer = current_user
-   
+    
+    #Strip stuff 
+    customer = Stripe::Customer.create(email: @order.buyer.email, card: params[:stripeToken])
 
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to root_url, notice: 'Order was successfully created.' }
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
-    end
+    begin 
+      charge = Stripe::Charge.create(customer:customer.id, amount: (@order.listing.price * 100).to_i, description: "Rails Stripe Customer Desc", currency: "usd")
+      flash[:notice] = "Thanks for ordering"
+      redirect_to listings_path
+    rescue Stripe::CardError => e 
+        flash[:error] = e.message 
+        redirect_to listing_orders_path(@listing)
+    end 
+     
+    # respond_to do |format|
+    #   if @order.save
+    #     format.html { redirect_to root_url, notice: 'Order was successfully created.' }
+    #     format.json { render :show, status: :created, location: @order }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @order.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /orders/1

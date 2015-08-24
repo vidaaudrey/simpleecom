@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     resources :orders, only: [:new, :create]
   end 
 
+  resources :charges 
+
   get 'sales', to: 'orders#sales'
   get 'purchases', to: 'orders#purchases'
 

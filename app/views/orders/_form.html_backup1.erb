@@ -1,0 +1,63 @@
+
+<div class="col-md-4">
+  <%= link_to image_tag(@listing.image.url, class: "order-image"), @listing %>
+</div>
+
+
+<div class="col-md-8">
+    <h2><%= @listing.name %></h2>
+    <h3> <%= @listing.price %></h3>
+
+    <%= form_for([@listing, @order]) do |f| %>
+      <%= render 'shared/error', obj: @order %>
+  
+  
+      <div class="form-group">
+        <%= f.label :address %>
+        <%= f.text_field :address, class:"form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :city %>
+        <%= f.text_field :city, class:"form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :state %>
+        <%= f.text_field :state, class:"form-control" %>
+      </div>
+  
+     
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-8">
+            <%= label_tag :card_number, "Credit Card Number" %>
+            <%= text_field_tag :card_number, nil, {name:nil, 'data-stripe': "number", class: "form-control"} %>
+            </div>
+  
+            <div class="col-md-4">
+              <%= label_tag :card_code, "CVC" %>
+              <%= text_field_tag :card_code, nil, {name:nil, 'data-stripe': "cvc", class: "form-control"} %>
+            </div>
+          </div>
+      </div>
+  
+      <div class="form-group">
+        <%= label_tag nil, "Expiration Date" %>
+        <div class="row">
+          <div class="col-md-3">
+            <%= select_month nil, {use_two_digit_numbers:true}, {name: nil, 'data-strip': "exp-month", class: "form-control"} %>
+          </div>
+          <div class="col-md-3">
+            <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+10}, {name: nil, 'data-strip': "exp-year", class: "form-control"} %>
+          </div>
+        </div>
+      </div>
+      
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-description=<%= @listing.name %>
+              data-amount=<%= @listing.price %>
+              data-locale="auto">
+      </script> 
+  
+    <% end %>
+  </div>
