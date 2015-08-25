@@ -7,7 +7,8 @@ listing =
     setupForm: -> 
         $('#new_listing').submit ->
             # only check if the bank info is blank 
-            if $('input').length > 6 
+            if $('input').length > 7
+                alert $('input').length
                 $('input[type=submit').attr('disabled', true)
                 Stripe.bankAccount.createToken($('#new_listing'), listing.handleStripeResponse)
                 false 
